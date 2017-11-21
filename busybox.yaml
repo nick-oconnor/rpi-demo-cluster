@@ -1,0 +1,46 @@
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  labels:
+    app: busybox-sa
+  name: busybox-sa
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: busybox-sa
+  labels:
+    app: busybox-sa
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: busybox-sa
+  namespace: default
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: busybox
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: busybox
+    spec:
+      serviceAccountName: busybox-sa
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+      nodeSelector:
+        loadBalancer: "true"
+      containers:
+      - image: armhf/busybox
+        name: busybox
+        command:
+        - sleep
+        - "3600"

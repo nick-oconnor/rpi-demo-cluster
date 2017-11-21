@@ -1,0 +1,47 @@
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  labels:
+    app: load-simulator-sa
+  name: load-simulator-sa
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: load-simulator-sa
+  labels:
+    app: load-simulator-sa
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: load-simulator-sa
+  namespace: default
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: load-simulator
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: load-simulator
+    spec:
+      serviceAccountName: load-simulator-sa
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+      nodeSelector:
+        loadBalancer: "true"
+      containers:
+      - image: ngpitt/load-simulator:v1
+        name: load-simulator
+        args:
+        - -url=http://pi.raspi/?digits=1000
+        - -clients=8
+        - -hpa=pi

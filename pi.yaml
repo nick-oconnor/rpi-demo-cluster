@@ -1,0 +1,55 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: pi
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pi
+        blinktShow: "true"
+        blinktColor: cpu
+    spec:
+      containers:
+      - image: ngpitt/pi:v1
+        name: pi
+        resources:
+          requests:
+            cpu: 1
+---
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v1
+metadata:
+  name: pi
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: pi
+  minReplicas: 1
+  maxReplicas: 32
+  targetCPUUtilizationPercentage: 50
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: pi
+spec:
+  selector:
+    app: pi
+  ports:
+  - port: 80
+---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: pi
+spec:
+  rules:
+  - host: pi.raspi
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: pi
+          servicePort: 80

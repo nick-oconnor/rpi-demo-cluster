@@ -1,0 +1,37 @@
+kind: DaemonSet
+apiVersion: extensions/v1beta1
+metadata:
+  name: blinkt-k8s-controller-pods
+  namespace: kube-system
+spec:
+  template:
+    metadata:
+      labels:
+        name: blinkt-k8s-controller-pods
+    spec:
+      serviceAccountName: blinkt-k8s-controller-sa
+      tolerations:
+      - key: "node-role.kubernetes.io/master"
+        operator: "Exists"
+        effect: "NoSchedule"
+      nodeSelector:
+        blinktImage: pods
+      containers:
+      - name: blinkt-k8s-controller-pods
+        image: ngpitt/blinkt-k8s-controller-pods:v1
+        args:
+        - -brightness=0.25
+        - -resync_period=10s
+        - -namespace=default
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        volumeMounts:
+        - mountPath: /sys
+          name: sys-tree
+      volumes:
+      - name: sys-tree
+        hostPath:
+          path: /sys

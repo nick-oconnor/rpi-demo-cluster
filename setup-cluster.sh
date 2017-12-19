@@ -31,7 +31,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config >> log 2>&1
 echo -ne " Done\nWaiting for kube-proxy..."
 ds_wait kube-system kube-proxy 1
 
-TOKEN=$(kubeadm token list | sed -n 2p | awk '{print $1}')
+TOKEN=$(sudo kubeadm token list | sed -n 2p | awk '{print $1}')
 openssl x509 -noout -in /etc/kubernetes/pki/ca.crt -pubkey | openssl asn1parse -noout -inform pem -out /tmp/public.key
 CA_CERT_HASH=$(openssl dgst -sha256 /tmp/public.key | awk '{print $2}')
 

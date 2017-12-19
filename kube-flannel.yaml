@@ -92,7 +92,7 @@ spec:
       serviceAccountName: flannel
       initContainers:
       - name: install-cni
-        image: quay.io/coreos/flannel:v0.9.0-arm
+        image: quay.io/coreos/flannel:v0.9.1-arm
         command:
         - cp
         args:

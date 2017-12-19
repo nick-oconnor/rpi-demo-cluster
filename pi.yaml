@@ -4,6 +4,9 @@ metadata:
   name: pi
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: pi
   template:
     metadata:
       labels:
@@ -19,16 +22,21 @@ spec:
             cpu: 1
 ---
 kind: HorizontalPodAutoscaler
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2beta1
 metadata:
   name: pi
 spec:
   scaleTargetRef:
+    apiVersion: extensions/v1beta1
     kind: Deployment
     name: pi
   minReplicas: 1
   maxReplicas: 32
-  targetCPUUtilizationPercentage: 50
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 50
 ---
 kind: Service
 apiVersion: v1

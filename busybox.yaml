@@ -39,7 +39,7 @@ spec:
       nodeSelector:
         loadBalancer: "true"
       containers:
-      - image: armhf/busybox
+      - image: arm32v7/busybox:latest
         name: busybox
         command:
         - sleep

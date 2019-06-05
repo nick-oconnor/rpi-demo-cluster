@@ -1,0 +1,14 @@
+kind: InitConfiguration
+apiVersion: kubeadm.k8s.io/v1beta1
+localAPIEndpoint:
+  advertiseAddress: 10.88.1.1
+---
+kind: ClusterConfiguration
+apiVersion: kubeadm.k8s.io/v1beta1
+networking:
+  podSubnet: 10.244.0.0/16
+controllerManager:
+  extraArgs:
+    horizontal-pod-autoscaler-sync-period: 10s
+    horizontal-pod-autoscaler-upscale-delay: 30s
+    horizontal-pod-autoscaler-downscale-stabilization: 30s

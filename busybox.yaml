@@ -32,12 +32,6 @@ spec:
         app: busybox
     spec:
       serviceAccountName: busybox-sa
-      tolerations:
-      - key: "node-role.kubernetes.io/master"
-        operator: "Exists"
-        effect: "NoSchedule"
-      nodeSelector:
-        loadBalancer: "true"
       containers:
       - image: arm32v7/busybox:latest
         name: busybox

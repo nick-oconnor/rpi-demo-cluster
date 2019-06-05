@@ -2,14 +2,10 @@
 
 set -e
 
-kubectl label node node1 blinktShow-
-kubectl label node node2 blinktShow-
-kubectl label node node3 blinktShow-
-kubectl label node node4 blinktShow-
-kubectl label node node5 blinktShow-
+for i in {1..5}; do
+    kubectl label node k8s-node-$i blinktShow-
+done
 
-kubectl label node node1 blinktShow=true
-kubectl label node node2 blinktShow=true
-kubectl label node node3 blinktShow=true
-kubectl label node node4 blinktShow=true
-kubectl label node node5 blinktShow=true
+for i in {1..5}; do
+    kubectl label node k8s-node-$1 blinktShow=true
+done

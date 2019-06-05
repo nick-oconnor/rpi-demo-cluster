@@ -32,16 +32,17 @@ spec:
         app: load-simulator
     spec:
       serviceAccountName: load-simulator-sa
-      tolerations:
-      - key: "node-role.kubernetes.io/master"
-        operator: "Exists"
-        effect: "NoSchedule"
-      nodeSelector:
-        loadBalancer: "true"
+      hostAliases:
+      - ip: "10.88.1.1"
+        hostnames:
+        - "pi.cluster"
       containers:
       - image: ngpitt/load-simulator:v1
         name: load-simulator
         args:
-        - -url=http://pi.raspi/?digits=1000
+        - -url=http://pi.cluster:32256/?digits=1000
         - -clients=8
         - -hpa=pi
+        env:
+        - name: GLOG_logtostderr
+          value: "1"

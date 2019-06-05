@@ -54,7 +54,7 @@ metadata:
   name: pi
 spec:
   rules:
-  - host: pi.raspi
+  - host: pi.cluster
     http:
       paths:
       - path: /

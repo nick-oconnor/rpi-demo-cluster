@@ -28,6 +28,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
+        - name: GLOG_logtostderr
+          value: "1"
         volumeMounts:
         - mountPath: /sys
           name: sys-tree

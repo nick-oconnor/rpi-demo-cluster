@@ -22,6 +22,9 @@ spec:
         args:
         - -brightness=0.25
         - -resync_period=10s
+        env:
+        - name: GLOG_logtostderr
+          value: "1"
         volumeMounts:
         - mountPath: /sys
           name: sys-tree

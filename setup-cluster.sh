@@ -29,7 +29,7 @@ enable-blinkt() {
 
 trap error ERR
 
-echo -n "Configuring k8s master..."
+echo -n "Initializing k8s..."
 sudo kubeadm init --config kubeadm-init.yaml &>> log
 mkdir -p $HOME/.kube
 sudo cp /etc/kubernetes/admin.conf $HOME/.kube/config >> log
@@ -56,8 +56,6 @@ ds-wait kube-system kube-flannel-ds 5
 
 echo -ne " Done\nWaiting for coredns..."
 deploy-wait kube-system coredns 2
-
-kubectl label node k8s-node-1 masterNode=true &>> log
 
 echo -ne " Done\nInstalling metrics server..."
 kubectl apply -f metrics-server &>> log

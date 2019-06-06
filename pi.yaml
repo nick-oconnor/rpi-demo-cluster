@@ -19,7 +19,7 @@ spec:
         name: pi
         resources:
           requests:
-            cpu: 1
+            cpu: 500m
 ---
 kind: HorizontalPodAutoscaler
 apiVersion: autoscaling/v2beta1

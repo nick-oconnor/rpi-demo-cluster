@@ -155,4 +155,19 @@ spec:
     targetPort: 8443
   selector:
     k8s-app: kubernetes-dashboard
-  type: NodePort
+---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: kubernetes-dashboard
+  namespace: kube-system
+spec:
+  rules:
+  - host: dashboard.cluster
+    http:
+      paths:
+      - backend:
+          serviceName: kubernetes-dashboard
+          servicePort: 443
+  tls:
+  - secretName: dashboard-web-ui-cert

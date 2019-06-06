@@ -40,7 +40,7 @@ spec:
       - image: ngpitt/load-simulator:v1
         name: load-simulator
         args:
-        - -url=http://pi.cluster:32256/?digits=1000
+        - -url=http://pi.cluster:30080/?digits=1000
         - -clients=8
         - -hpa=pi
         env:

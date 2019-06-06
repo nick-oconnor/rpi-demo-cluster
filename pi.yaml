@@ -57,7 +57,6 @@ spec:
   - host: pi.cluster
     http:
       paths:
-      - path: /
-        backend:
+      - backend:
           serviceName: pi
           servicePort: 80

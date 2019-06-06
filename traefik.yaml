@@ -67,12 +67,18 @@ spec:
         ports:
         - name: http
           containerPort: 80
+        - name: https
+          containerPort: 443
         - name: admin
           containerPort: 8080
         args:
         - --api
         - --kubernetes
         - --logLevel=INFO
+        - --insecureSkipVerify
+        - --defaultentrypoints=http,https
+        - --entrypoints=Name:http Address::80
+        - --entrypoints=Name:https Address::443 TLS
 ---
 kind: Service
 apiVersion: v1
@@ -85,6 +91,36 @@ spec:
   ports:
   - name: http
     port: 80
-  - name: admin
-    port: 8080
+    nodePort: 30080
+  - name: https
+    port: 443
+    nodePort: 30443
   type: NodePort
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: traefik-web-ui-service
+  namespace: kube-system
+spec:
+  selector:
+    k8s-app: traefik-ingress-lb
+  ports:
+  - port: 80
+    targetPort: 8080
+---
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: traefik-web-ui
+  namespace: kube-system
+spec:
+  rules:
+  - host: traefik.cluster
+    http:
+      paths:
+      - backend:
+          serviceName: traefik-web-ui-service
+          servicePort: 80
+  tls:
+  - secretName: traefik-web-ui-cert
